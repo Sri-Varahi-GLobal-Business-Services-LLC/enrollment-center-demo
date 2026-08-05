@@ -155,7 +155,8 @@
   <b>Demo environment.</b> This static page simulates the BTP-hosted Enrollment Center described in the
   <i>Customer Enrollment Center for SAP Service Cloud V2 &mdash; Solution Design v2.0</i>.
   In the target architecture this UI is a SAPUI5 app on SAP BTP embedded in SC V2 (work center mashup / Move-In guided step).
-  Program catalog drawn from the legacy Customer Programs Enrollment Center scope (PTR, CPP, CSDD, DPP, PrePay, Peak Power Savers, CARE/FERA).
+  Program catalog drawn from the legacy Customer Programs Enrollment Center scope (PTR, CPP, CSDD, DPP, PrePay, Peak Power Savers, CARE/FERA)
+  and the U.S. Utility Customer Programs Reference Catalog (DER/DR, energy efficiency, billing, payment, assistance and sustainability programs).
   All customers and data are fictitious; no real systems are called; data resets on page reload.
 </footer>
 
@@ -206,7 +207,49 @@ const CATALOG = {
          fields:[{k:"contactPhone",l:"24h Contact Phone",t:"text"},{k:"equipment",l:"Medical Equipment Type",t:"select",opts:["Oxygen concentrator","Dialysis","CPAP/Ventilator","Other"]}]},
   CDR:  {name:"Commercial Demand Response (C&I)", cat:"Demand Response / Commercial", recipe:"RECIPE_RATE",
          terms:"Curtailment credits for reducing load on utility dispatch. Minimum 50 kW curtailable load; interval telemetry required. Season: June-September.",
-         fields:[{k:"curtailableLoad",l:"Curtailable Load (kW)",t:"number",min:50,max:5000},{k:"opsContact",l:"Operations Contact (24h)",t:"text"}]}
+         fields:[{k:"curtailableLoad",l:"Curtailable Load (kW)",t:"number",min:50,max:5000},{k:"opsContact",l:"Operations Contact (24h)",t:"text"}]},
+  EVMC: {name:"EV Managed Charging", cat:"Demand Response / DER", recipe:"RECIPE_DER",
+         terms:"Enroll an electric vehicle or networked charger via telematics or the charger network. Charging shifts to off-peak windows; per-session or monthly incentives. You can always override for immediate charging.",
+         fields:[{k:"enrollMethod",l:"Enrollment Method",t:"select",opts:["Vehicle telematics","Networked charger"]},{k:"vehicleModel",l:"Vehicle / Charger Model",t:"text"},{k:"startDate",l:"Requested Start Date",t:"date"}]},
+  EEREB:{name:"Energy-Efficiency Rebates", cat:"Energy Efficiency", recipe:"RECIPE_EE",
+         terms:"Rebates for qualifying efficiency purchases (heat pumps, HVAC, insulation, appliances). Instant or mail-in; permanently lower bills. Rebate tiers per measure and efficiency rating.",
+         fields:[{k:"measure",l:"Measure",t:"select",opts:["Heat pump","HVAC replacement","Insulation","Appliance","Smart controls"]},{k:"purchaseDate",l:"Purchase Date",t:"date"},{k:"invoiceAmount",l:"Invoice Amount ($)",t:"number",min:50,max:50000}]},
+  AUTOPAY:{name:"AutoPay / Recurring Payment", cat:"Payment", recipe:"RECIPE_PAYMENT",
+         terms:"Automatic draft of the bill amount from a bank account or tokenized card each cycle. Never miss a payment; combines with any billing program.",
+         fields:[{k:"payMethod",l:"Payment Method on File",t:"select",opts:["Bank account (direct debit)","Card (tokenized)"]},{k:"startCycle",l:"Start With Bill Cycle",t:"select",opts:["Next bill","Following bill"]}]},
+  PEXT: {name:"Payment Extension", cat:"Payment", recipe:"RECIPE_PAYMENT",
+         terms:"A short one-time grace period past the due date for an account in good standing. Does not suppress dunning beyond the extension date.",
+         fields:[{k:"extensionDays",l:"Extension",t:"select",opts:["5 days","10 days","15 days"]},{k:"reason",l:"Reason",t:"select",opts:["Income timing","Temporary hardship","Other"]}]},
+  SUMBILL:{name:"Summary / Consolidated Billing", cat:"Billing Preference", recipe:"RECIPE_BILLCONFIG",
+         terms:"Combines multiple accounts or meters on one statement (joint invoicing / collective bill). For customers with many premises: C&I, landlords, agencies.",
+         fields:[{k:"masterAccount",l:"Master Contract Account",t:"text"},{k:"billCycle",l:"Consolidated Bill Cycle",t:"select",opts:["Monthly - 1st","Monthly - 15th"]}]},
+  TPN:  {name:"Third-Party / Duplicate Bill Notification", cat:"Assistance", recipe:"RECIPE_CORR",
+         terms:"Sends a copy of bills or shutoff notices to a designated third party (relative, caregiver, agency) so protected customers are not disconnected unnoticed.",
+         fields:[{k:"thirdPartyName",l:"Third-Party Name",t:"text"},{k:"thirdPartyContact",l:"Third-Party Email / Phone",t:"text"},{k:"relationship",l:"Relationship",t:"select",opts:["Relative","Caregiver","Agency","Other"]}]},
+  LIHEAP:{name:"LIHEAP Energy Assistance", cat:"Assistance", recipe:"RECIPE_ASSIST",
+         terms:"Federal energy-bill assistance grant for income-qualified households, applied to the account balance; crisis assistance available. Agency verification follows enrollment.",
+         fields:[{k:"householdSize",l:"Household Size",t:"number",min:1,max:12},{k:"incomeBracket",l:"Annual Household Income",t:"select",opts:["Below $30,000","$30,000-$45,000","$45,000-$60,000"]}]},
+  PIPP: {name:"Percentage of Income Payment Plan (PIPP)", cat:"Assistance", recipe:"RECIPE_ASSIST",
+         terms:"Caps the monthly bill at a fixed percentage of verified household income. Income re-verification annually; missed payments can end the cap.",
+         fields:[{k:"householdIncome",l:"Monthly Household Income ($)",t:"number",min:1,max:20000},{k:"percentCap",l:"Payment Cap",t:"select",opts:["2% of income","4% of income","6% of income"]}]},
+  AMP:  {name:"Arrearage Management / Forgiveness (AMP)", cat:"Assistance", recipe:"RECIPE_PAYMENT",
+         terms:"Forgives a portion of past-due debt for each month the current bill is paid on time, until the arrears are cleared. Default removes remaining forgiveness.",
+         fields:[{k:"commitTerm",l:"Commitment Term",t:"select",opts:["12 months","18 months"]},{k:"startDate",l:"First On-Time Bill Month",t:"date"}]},
+  GREEN:{name:"Green Power / Renewable Choice", cat:"Rate / Sustainability", recipe:"RECIPE_RATE",
+         terms:"Purchase 50-100% renewable energy for a small premium per kWh, applied as a product option / surcharge on the rate.",
+         fields:[{k:"renewableShare",l:"Renewable Share",t:"select",opts:["50%","100%"]},{k:"startDate",l:"Requested Start Date",t:"date"}]},
+  CSOL: {name:"Community Solar Subscription", cat:"Rate / Sustainability", recipe:"RECIPE_RATE",
+         terms:"Subscribe to a share of a community solar array and receive bill credits for its output - solar savings without rooftop panels. Subject to array availability; low-income capacity reserved.",
+         fields:[{k:"subscriptionShare",l:"Subscription Share",t:"select",opts:["1 kW block","2 kW blocks","5 kW blocks"]},{k:"startDate",l:"Requested Start Date",t:"date"}]},
+  ALERTS:{name:"Usage / High-Bill Alerts", cat:"Account Management", recipe:"RECIPE_NOTIF",
+         terms:"Notifies you when usage or the projected bill crosses your threshold (requires AMI meter). Avoid bill surprises; choose your channel.",
+         fields:[{k:"alertType",l:"Alert Type",t:"select",opts:["Usage threshold","Projected high bill","Both"]},{k:"threshold",l:"Threshold ($ projected bill)",t:"number",min:25,max:2000},{k:"channel",l:"Channel",t:"select",opts:["SMS","Email","Push"]}]},
+  INTR: {name:"Interruptible / Firm Service Level Tariff", cat:"Demand Response / Commercial", recipe:"RECIPE_RATE",
+         terms:"Year-round discounted rate for large customers who contractually agree to interrupt load down to a firm service level on utility request. Penalties apply for non-performance.",
+         fields:[{k:"firmServiceLevel",l:"Firm Service Level (kW)",t:"number",min:100,max:50000},{k:"contractTerm",l:"Contract Term",t:"select",opts:["12 months","36 months","60 months"]}]},
+  ADR:  {name:"Automated Demand Response (OpenADR)", cat:"Demand Response / Commercial", recipe:"RECIPE_DER",
+         terms:"Additional incentives for automating curtailment through a building/energy management system that receives OpenADR dispatch signals; includes rebates on control equipment.",
+         fields:[{k:"bmsVendor",l:"BMS / EMS Vendor",t:"text"},{k:"openadrVersion",l:"OpenADR Version",t:"select",opts:["2.0a","2.0b","3.0"]}]}
 };
 
 /* =================== CUSTOMER PERSONAS =================== */
@@ -223,10 +266,11 @@ const CUSTOMERS = {
         {id:"DPP",  status:"Enrolled", reqDate:"2026-04-14", enrDate:"2026-04-15", ca:"300000123456",
          exitBlock:"Outstanding installment balance of $342.50 on plan 300000123456/000000000042 (EC_EXIT/007)"}
       ],
-      available:["PTR","TOU","THERM","PPS","PREPAY","MED"],
+      available:["PTR","TOU","THERM","PPS","EVMC","EEREB","GREEN","CSOL","ALERTS","AUTOPAY","PREPAY","MED"],
       messages:[
         {prog:"DPP", sev:"hard", code:"EC_ELIG/012", txt:"Active installment plan already exists on contract account 300000123456."},
         {prog:"CPP", sev:"hard", code:"EC_ELIG/045", txt:"Re-enrollment waiting period active until 10 Sep 2026 (de-enrolled 10 Mar 2026)."},
+        {prog:"AMP", sev:"hard", code:"EC_ELIG/071", txt:"No eligible arrears &mdash; arrearage management requires a qualifying past-due balance."},
         {prog:"CSDD",sev:"warn", code:"EC_ELIG/031", txt:"Two returned payments in last 12 months &mdash; supervisor approval required."}
       ],
       history:[
@@ -243,9 +287,10 @@ const CUSTOMERS = {
       participating:[
         {id:"EBILL",status:"Enrolled", reqDate:"2024-08-10", enrDate:"2024-08-10", ca:"300000129876"}
       ],
-      available:["DPP","CARE","PREPAY","TOU"],
+      available:["DPP","CARE","LIHEAP","PIPP","AMP","PEXT","PREPAY","TOU","AUTOPAY"],
       messages:[
         {prog:"PTR", sev:"hard", code:"EC_ELIG/018", txt:"AMI meter communication disabled &mdash; open meter ticket MT-4471 must be resolved first."},
+        {prog:"ALERTS", sev:"hard", code:"EC_ELIG/018", txt:"AMI meter communication disabled &mdash; open meter ticket MT-4471 must be resolved first."},
         {prog:"BB",  sev:"info", code:"EC_ELIG/062", txt:"Not yet eligible &mdash; requires 12 months billing history at premise (7 of 12)."},
         {prog:"CSDD",sev:"warn", code:"EC_ELIG/031", txt:"Two returned payments in last 12 months &mdash; supervisor approval required."}
       ],
@@ -263,7 +308,7 @@ const CUSTOMERS = {
         {id:"MED", status:"Enrolled", reqDate:"2023-05-02", enrDate:"2023-05-04", ca:"300000110234"},
         {id:"BB",  status:"Enrolled", reqDate:"2022-01-10", enrDate:"2022-01-12", ca:"300000110234"}
       ],
-      available:["CSDD","EBILL","THERM"],
+      available:["CSDD","EBILL","THERM","TPN","GREEN","LIHEAP"],
       messages:[
         {prog:"PREPAY", sev:"hard", code:"EC_ELIG/052", txt:"Prepayment not permitted &mdash; active Medical Alert / life-support equipment at premise."},
         {prog:"PTR",    sev:"hard", code:"EC_ELIG/044", txt:"Requires AMI meter &mdash; premise has AMR device (exchange candidate list)."},
@@ -280,7 +325,7 @@ const CUSTOMERS = {
       participating:[
         {id:"EBILL",status:"Enrolled", reqDate:"2023-03-01", enrDate:"2023-03-01", ca:"300000201188"}
       ],
-      available:["TOU","CDR","BB"],
+      available:["TOU","CDR","ADR","INTR","SUMBILL","EEREB","GREEN","BB"],
       messages:[
         {prog:"PTR",  sev:"hard", code:"EC_ELIG/002", txt:"Restricted to residential rate class."},
         {prog:"THERM",sev:"hard", code:"EC_ELIG/002", txt:"Restricted to residential rate class."},
@@ -301,7 +346,7 @@ const MOVEIN = {
   start:"2026-08-15", caseId:"CAS-2026-018402",
   seed(){ return {
     participating:[],
-    available:["PTR","CPP","TOU","THERM","CSDD","EBILL","PREPAY","CARE"],
+    available:["PTR","CPP","TOU","THERM","CSDD","EBILL","AUTOPAY","ALERTS","GREEN","EVMC","PREPAY","CARE"],
     messages:[
       {prog:"DPP", sev:"info", code:"EC_ELIG/090", txt:"Not yet eligible &mdash; payment plans require an active contract with billing history."},
       {prog:"BB",  sev:"info", code:"EC_ELIG/062", txt:"Not yet eligible &mdash; requires 12 months billing history at premise."},
