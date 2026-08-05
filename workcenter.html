@@ -190,9 +190,12 @@ const CATALOG = {
   EBILL:{name:"eBill / Paperless Billing", cat:"Billing Preference", recipe:"RECIPE_EBILL",
          terms:"Bills delivered electronically with email notification; paper bill suppressed. Can be combined with any payment program.",
          fields:[{k:"email",l:"Delivery Email Address",t:"text"}]},
-  DPP:  {name:"Deferred Payment Plan (DPP)", cat:"Payment", recipe:"RECIPE_DPP",
+  DPA:  {name:"Payment Plan / Deferred Payment Arrangement (DPA)", cat:"Payment", recipe:"RECIPE_DPP",
          terms:"Spread an outstanding balance over equal monthly installments billed alongside the current charges. Dunning is suppressed while the plan is kept; default terminates the plan and reinstates collections.",
          fields:[{k:"downPayment",l:"Down Payment",t:"select",opts:["0%","25%","50%"]},{k:"numInstallments",l:"Number of Installments",t:"select",opts:["6","12","18"]},{k:"startDate",l:"First Installment Date",t:"date"}]},
+  DPP:  {name:"Dynamic Peak Pricing (DPP)", cat:"Demand Response / Rate", recipe:"RECIPE_RATE",
+         terms:"Time-varying rate: lower base prices year-round in exchange for significantly higher prices during called peak events (typically summer weekday afternoons). Requires an AMI meter. Fulfilled as a rate/product change on the utilities contract (legacy: product change to the residential DPP/RCPP rate).",
+         fields:[{k:"startDate",l:"Requested Start Date",t:"date"},{k:"notifChannel",l:"Event Notification Channel",t:"select",opts:["SMS","Email","Voice call"]}]},
   BB:   {name:"Budget Billing", cat:"Payment", recipe:"RECIPE_BB",
          terms:"Levelized monthly payment based on the 12-month rolling average; trued up at annual review. Requires 12 months of billing history at the premise.",
          fields:[{k:"startDate",l:"Requested Start Date",t:"date"}]},
@@ -263,12 +266,12 @@ const CUSTOMERS = {
       participating:[
         {id:"BB",   status:"Enrolled", reqDate:"2025-11-03", enrDate:"2025-11-05", ca:"300000123456"},
         {id:"EBILL",status:"Enrolled", reqDate:"2025-11-03", enrDate:"2025-11-03", ca:"300000123456"},
-        {id:"DPP",  status:"Enrolled", reqDate:"2026-04-14", enrDate:"2026-04-15", ca:"300000123456",
+        {id:"DPA",  status:"Enrolled", reqDate:"2026-04-14", enrDate:"2026-04-15", ca:"300000123456",
          exitBlock:"Outstanding installment balance of $342.50 on plan 300000123456/000000000042 (EC_EXIT/007)"}
       ],
-      available:["PTR","TOU","THERM","PPS","EVMC","EEREB","GREEN","CSOL","ALERTS","AUTOPAY","PREPAY","MED"],
+      available:["PTR","DPP","TOU","THERM","PPS","EVMC","EEREB","GREEN","CSOL","ALERTS","AUTOPAY","PREPAY","MED"],
       messages:[
-        {prog:"DPP", sev:"hard", code:"EC_ELIG/012", txt:"Active installment plan already exists on contract account 300000123456."},
+        {prog:"DPA", sev:"hard", code:"EC_ELIG/012", txt:"Active installment plan already exists on contract account 300000123456."},
         {prog:"CPP", sev:"hard", code:"EC_ELIG/045", txt:"Re-enrollment waiting period active until 10 Sep 2026 (de-enrolled 10 Mar 2026)."},
         {prog:"AMP", sev:"hard", code:"EC_ELIG/071", txt:"No eligible arrears &mdash; arrearage management requires a qualifying past-due balance."},
         {prog:"CSDD",sev:"warn", code:"EC_ELIG/031", txt:"Two returned payments in last 12 months &mdash; supervisor approval required."}
@@ -287,7 +290,7 @@ const CUSTOMERS = {
       participating:[
         {id:"EBILL",status:"Enrolled", reqDate:"2024-08-10", enrDate:"2024-08-10", ca:"300000129876"}
       ],
-      available:["DPP","CARE","LIHEAP","PIPP","AMP","PEXT","PREPAY","TOU","AUTOPAY"],
+      available:["DPA","CARE","LIHEAP","PIPP","AMP","PEXT","PREPAY","TOU","AUTOPAY"],
       messages:[
         {prog:"PTR", sev:"hard", code:"EC_ELIG/018", txt:"AMI meter communication disabled &mdash; open meter ticket MT-4471 must be resolved first."},
         {prog:"ALERTS", sev:"hard", code:"EC_ELIG/018", txt:"AMI meter communication disabled &mdash; open meter ticket MT-4471 must be resolved first."},
@@ -295,7 +298,7 @@ const CUSTOMERS = {
         {prog:"CSDD",sev:"warn", code:"EC_ELIG/031", txt:"Two returned payments in last 12 months &mdash; supervisor approval required."}
       ],
       history:[
-        {id:"DPP", start:"2024-02-15", end:"2024-11-20", outcome:"Completed &mdash; balance cleared on schedule"}
+        {id:"DPA", start:"2024-02-15", end:"2024-11-20", outcome:"Completed &mdash; balance cleared on schedule"}
       ]};}
   },
   "1000001188": {
@@ -346,9 +349,9 @@ const MOVEIN = {
   start:"2026-08-15", caseId:"CAS-2026-018402",
   seed(){ return {
     participating:[],
-    available:["PTR","CPP","TOU","THERM","CSDD","EBILL","AUTOPAY","ALERTS","GREEN","EVMC","PREPAY","CARE"],
+    available:["PTR","CPP","DPP","TOU","THERM","CSDD","EBILL","AUTOPAY","ALERTS","GREEN","EVMC","PREPAY","CARE"],
     messages:[
-      {prog:"DPP", sev:"info", code:"EC_ELIG/090", txt:"Not yet eligible &mdash; payment plans require an active contract with billing history."},
+      {prog:"DPA", sev:"info", code:"EC_ELIG/090", txt:"Not yet eligible &mdash; payment plans require an active contract with billing history."},
       {prog:"BB",  sev:"info", code:"EC_ELIG/062", txt:"Not yet eligible &mdash; requires 12 months billing history at premise."},
       {prog:"PPS", sev:"info", code:"EC_ELIG/093", txt:"Device installation is scheduled only after contract activation &mdash; offer at first bill review."}
     ],
