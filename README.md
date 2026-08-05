@@ -4,11 +4,22 @@ A self-contained, static HTML demo of a **Customer Enrollment Center** concept f
 SAP Service Cloud Version 2, illustrating a BTP-hosted extension UI for utility
 customer program enrollment.
 
-**Live demo (GitHub Pages):** https://nammi2011.github.io/enrollment-center-demo/
+## Pages
+
+| Page | Mode |
+|---|---|
+| `index.html` | Combined — Work Center / Move-In toggle |
+| `workcenter.html` | Work Center only (identified customer with active contracts, persona switcher) |
+| `movein.html` | Move-In embedded step only (pre-active context, deferred fulfillment) |
+
+Live (GitHub Pages, once enabled): https://nammi2011.github.io/enrollment-center-demo/ ,
+`/workcenter.html`, `/movein.html`
 
 ## What it shows
 
 - Two access modes: standalone **Work Center** and **Move-In (embedded)** pre-active context
+- Four customer personas (residential combo, credit-challenged, medical/protected, commercial) selectable in Work Center mode
+- Program catalog from the legacy Enrollment Center scope: PTR, CPP, TOU, Peak Power Savers, Smart Thermostat, CSDD, eBill, DPP, Budget Billing, PrePay, CARE/FERA, Medical Alert, Commercial DR
 - The four Enrollment Center panels: Participating Programs, Available (Eligible) Programs,
   Eligibility Messages (hard stop / warning severities), Program History
 - Enrollment wizard with program-specific data capture, consent recording and idempotent submission
