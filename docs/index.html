@@ -252,12 +252,18 @@ const CATALOG = {
 /* =================== CUSTOMER PERSONAS =================== */
 const CUSTOMERS = {
   "1000004711": {
-    name:"Maria Gonzalez", initials:"MG", type:"Residential", tag:"(AMI &middot; combo)",
+    name:"Maria Gonzalez", initials:"MG", type:"Residential", tag:"(combo &middot; CA per utility)",
     premise:"1420 Alamo Heights Blvd, San Antonio, TX 78209",
-    cas:[{id:"300000123456",div:"Electricity"},{id:"300000123457",div:"Gas"}],
+    cas:[
+      {id:"300000123456", div:"Electricity",
+       device:{deviceNo:"10004481", meterNo:"1KA-88213045", model:"Landis+Gyr E360", type:"AMI",
+               status:"Connected", lastRead:"2026-07-05", lastValue:"41,208 kWh"}},
+      {id:"300000123457", div:"Gas",
+       device:{deviceNo:"10004482", meterNo:"5MG-30447126", model:"Honeywell BK-G4 (AMR)", type:"AMR",
+               status:"Manual read", lastRead:"2026-06-22", lastValue:"1,884 therms"}}
+    ],
+    der:[{name:"Level-2 EV charger 11 kW (networked)", status:"Active"}],
     caseId:"CAS-2026-018233",
-    device:{meterNo:"1KA-88213045", model:"Landis+Gyr E360", type:"AMI", commOk:true,
-            lastRead:"2026-07-05", lastValue:"41,208 kWh", note:"Gas index 5MG-4471 &middot; AMR"},
     seed(){ return {
       participating:[
         {id:"BB",   status:"Enrolled", reqDate:"2025-11-03", enrDate:"2025-11-05", ca:"300000123456"},
@@ -280,10 +286,13 @@ const CUSTOMERS = {
   "1000007322": {
     name:"Robert Chen", initials:"RC", type:"Residential", tag:"(credit &middot; AMI fault)",
     premise:"312 Mission Street Apt 2, San Antonio, TX 78210",
-    cas:[{id:"300000129876",div:"Electricity"}],
+    cas:[
+      {id:"300000129876", div:"Electricity",
+       device:{deviceNo:"10007702", meterNo:"1KA-77419320", model:"Itron OpenWay", type:"AMI",
+               status:"Comm fault", lastRead:"2026-05-18", lastValue:"9,842 kWh (estimated since)",
+               note:"Open meter ticket MT-4471"}}
+    ],
     caseId:"CAS-2026-018377",
-    device:{meterNo:"1KA-77419320", model:"Itron OpenWay", type:"AMI", commOk:false,
-            lastRead:"2026-05-18", lastValue:"9,842 kWh (estimated since)", note:"Open meter ticket MT-4471"},
     seed(){ return {
       participating:[
         {id:"EBILL",status:"Enrolled", reqDate:"2024-08-10", enrDate:"2024-08-10", ca:"300000129876"}
@@ -300,12 +309,18 @@ const CUSTOMERS = {
       ]};}
   },
   "1000001188": {
-    name:"Dorothy Wilson", initials:"DW", type:"Residential", tag:"(medical &middot; AMR)",
+    name:"Dorothy Wilson", initials:"DW", type:"Residential", tag:"(combo &middot; single CA &middot; medical)",
     premise:"97 Elm Grove Lane, San Antonio, TX 78212",
-    cas:[{id:"300000110234",div:"Electricity"},{id:"300000110235",div:"Gas"}],
+    cas:[
+      {id:"300000110234", div:"Electricity",
+       device:{deviceNo:"10001192", meterNo:"AMR-30918744", model:"Sensus iConA (AMR)", type:"AMR",
+               status:"Manual read", lastRead:"2026-06-28", lastValue:"22,540 kWh",
+               note:"On AMI exchange candidate list"}},
+      {id:"300000110234", div:"Gas",
+       device:{deviceNo:"10001193", meterNo:"5MG-11209384", model:"Elster BK-G4 (AMR)", type:"AMR",
+               status:"Manual read", lastRead:"2026-06-28", lastValue:"2,102 therms"}}
+    ],
     caseId:"CAS-2026-018395",
-    device:{meterNo:"AMR-30918744", model:"Sensus iConA (AMR)", type:"AMR", commOk:false,
-            lastRead:"2026-06-28", lastValue:"22,540 kWh", note:"On AMI exchange candidate list"},
     seed(){ return {
       participating:[
         {id:"MED", status:"Enrolled", reqDate:"2023-05-02", enrDate:"2023-05-04", ca:"300000110234"},
@@ -320,12 +335,17 @@ const CUSTOMERS = {
       history:[]};}
   },
   "2000003456": {
-    name:"Harborview Apartments LLC", initials:"HA", type:"Commercial", tag:"(C&amp;I interval)",
+    name:"Harborview Apartments LLC", initials:"HA", type:"Commercial", tag:"(C&amp;I interval &middot; BESS)",
     premise:"2100 Broadway Commercial Plaza, San Antonio, TX 78215",
-    cas:[{id:"300000201188",div:"Electricity"}],
+    cas:[
+      {id:"300000201188", div:"Electricity",
+       device:{deviceNo:"10009915", meterNo:"3PH-55120087", model:"Elster A1800 (interval)", type:"AMI",
+               status:"Connected", lastRead:"2026-07-06", lastValue:"184,320 kWh",
+               note:"15-min interval telemetry &middot; 480 V CT metering"}}
+    ],
+    der:[{name:"Battery storage 250 kWh (BESS)", status:"Interconnected"},
+         {name:"Standby generator 500 kW (diesel)", status:"Registered"}],
     caseId:"CAS-2026-018410",
-    device:{meterNo:"3PH-55120087", model:"Elster A1800 (interval)", type:"AMI", commOk:true,
-            lastRead:"2026-07-06", lastValue:"184,320 kWh", note:"15-min interval telemetry &middot; 480 V CT metering"},
     seed(){ return {
       participating:[
         {id:"EBILL",status:"Enrolled", reqDate:"2023-03-01", enrDate:"2023-03-01", ca:"300000201188"}
@@ -344,10 +364,13 @@ const CUSTOMERS = {
   "1000005566": {
     name:"Frank Torres", initials:"FT", type:"Residential", tag:"(non-AMI meter)",
     premise:"740 Pecan Valley Dr, San Antonio, TX 78223",
-    cas:[{id:"300000131111",div:"Electricity"}],
+    cas:[
+      {id:"300000131111", div:"Electricity",
+       device:{deviceNo:"10005520", meterNo:"AMR-22084517", model:"Sensus iConA (AMR)", type:"AMR",
+               status:"Manual read", lastRead:"2026-06-30", lastValue:"15,772 kWh",
+               note:"Drive-by monthly read &middot; not on AMI exchange list yet"}}
+    ],
     caseId:"CAS-2026-018421",
-    device:{meterNo:"AMR-22084517", model:"Sensus iConA (AMR)", type:"AMR", commOk:false,
-            lastRead:"2026-06-30", lastValue:"15,772 kWh", note:"Drive-by monthly read &middot; not on AMI exchange list yet"},
     seed(){ return {
       participating:[
         {id:"EBILL",status:"Enrolled", reqDate:"2023-04-12", enrDate:"2023-04-12", ca:"300000131111"}
@@ -366,10 +389,13 @@ const CUSTOMERS = {
   "1000002244": {
     name:"Elena Vasquez", initials:"EV", type:"Residential", tag:"(medical &middot; AMI)",
     premise:"1512 Olmos Creek Way, San Antonio, TX 78230",
-    cas:[{id:"300000114499",div:"Electricity"}],
+    cas:[
+      {id:"300000114499", div:"Electricity",
+       device:{deviceNo:"10002261", meterNo:"1KA-66120988", model:"Landis+Gyr E360", type:"AMI",
+               status:"Connected", lastRead:"2026-07-06", lastValue:"33,914 kWh",
+               note:"Life-support equipment registered at premise"}}
+    ],
     caseId:"CAS-2026-018435",
-    device:{meterNo:"1KA-66120988", model:"Landis+Gyr E360", type:"AMI", commOk:true,
-            lastRead:"2026-07-06", lastValue:"33,914 kWh", note:"Life-support equipment registered at premise"},
     seed(){ return {
       participating:[
         {id:"MED",  status:"Enrolled", reqDate:"2024-09-20", enrDate:"2024-09-22", ca:"300000114499"},
@@ -386,10 +412,13 @@ const CUSTOMERS = {
   "1000008833": {
     name:"Tom Becker", initials:"TB", type:"Residential", tag:"(prepay active)",
     premise:"233 Blue Star St Apt 12, San Antonio, TX 78204",
-    cas:[{id:"300000140022",div:"Electricity"}],
+    cas:[
+      {id:"300000140022", div:"Electricity",
+       device:{deviceNo:"10008144", meterNo:"1KA-81430276", model:"Itron OpenWay", type:"AMI",
+               status:"Connected", lastRead:"2026-07-07 (daily prepay read)",
+               lastValue:"6,204 kWh &middot; balance $18.60", note:"Remote disconnect/reconnect enabled"}}
+    ],
     caseId:"CAS-2026-018448",
-    device:{meterNo:"1KA-81430276", model:"Itron OpenWay", type:"AMI", commOk:true,
-            lastRead:"2026-07-07 (daily prepay read)", lastValue:"6,204 kWh &middot; balance $18.60", note:"Remote disconnect/reconnect enabled"},
     seed(){ return {
       participating:[
         {id:"PREPAY",status:"Enrolled", reqDate:"2025-02-01", enrDate:"2025-02-03", ca:"300000140022",
@@ -415,8 +444,8 @@ const MOVEIN = {
   moveInId:"MI-2026-00811",
   premise:"88 Riverwalk Terrace Apt 4B, San Antonio, TX 78205",
   start:"2026-08-15", caseId:"CAS-2026-018402",
-  device:{meterNo:"1KA-90551133", model:"Landis+Gyr E360", type:"AMI", commOk:true,
-          lastRead:"2026-07-31 (final read, previous occupant)", lastValue:"7,455 kWh",
+  device:{deviceNo:"10009051", meterNo:"1KA-90551133", model:"Landis+Gyr E360", type:"AMI",
+          status:"Connected", lastRead:"2026-07-31 (final read, previous occupant)", lastValue:"7,455 kWh",
           note:"Premise device verified at move-in survey"},
   seed(){ return {
     participating:[],
@@ -458,15 +487,31 @@ function statusChip(s){
   return `<span class="status ${map[s]||"st-request"}">${s}</span>`;
 }
 function cust(){ return CUSTOMERS[currentBP]; }
-/* Device / meter context — drives the AMI-dependent eligibility rules */
-function deviceKv(d){
-  if(!d) return "";
-  const cls = d.type==="AMI" ? (d.commOk?"green":"orange") : "grey";
-  const txt = d.type==="AMI" ? (d.commOk?"AMI &middot; Communicating":"AMI &middot; Comm fault") : "AMR &middot; Manual read";
-  return `<div class="kv"><b>Meter / Device</b>${d.meterNo} &middot; ${d.model}
-    <span class="dev"><span class="pill ${cls}">${txt}</span></span>
-    <span class="dev">Last read ${d.lastRead} &middot; ${d.lastValue}</span>
-    ${d.note?`<span class="dev">${d.note}</span>`:""}</div>`;
+/* Contract accounts — supports both combo patterns: CA per utility, or one CA for all utilities */
+function caKv(cas){
+  const byId = {};
+  cas.forEach(c => { (byId[c.id] = byId[c.id] || []).push(c.div); });
+  return Object.entries(byId).map(([id, divs]) =>
+    `${id} ${divs.map(d=>`<span class="pill blue">${d}</span>`).join(" ")}`).join("<br>");
+}
+/* Per-utility device block — device no., meter no., AMI/AMR + connection status; drives eligibility rules */
+function statusPill(d){
+  const cls = d.status==="Connected"?"green": d.status==="Comm fault"?"orange": d.status==="Disconnected"?"red":"grey";
+  return `<span class="pill ${cls}">${d.type} &middot; ${d.status}</span>`;
+}
+function devicesKv(cas){
+  const rows = cas.filter(c=>c.device).map(c => {
+    const d = c.device;
+    return `<span class="dev"><u>${c.div}</u> &nbsp;Device ${d.deviceNo} &middot; Meter ${d.meterNo} &nbsp;${statusPill(d)}</span>` +
+           `<span class="dev muted">${d.model} &middot; last read ${d.lastRead} &middot; ${d.lastValue}${d.note?` &middot; ${d.note}`:""}</span>`;
+  });
+  return rows.length ? `<div class="kv"><b>Meter / Device (per utility)</b>${rows.join("")}</div>` : "";
+}
+/* DER equipment associated with the customer (feeds DER program eligibility) */
+function derKv(der){
+  if(!der || !der.length) return "";
+  return `<div class="kv"><b>DER Equipment</b>${der.map(a =>
+    `<span class="dev">&#9889; ${a.name} <span class="pill ${a.status==="Interconnected"||a.status==="Active"?"green":"grey"}">${a.status}</span></span>`).join("")}</div>`;
 }
 function render(){
   const C=cust();
@@ -474,9 +519,10 @@ function render(){
     <div class="avatar">${C.initials}</div>
     <div><div class="name">${C.name} <span class="pill ${C.type==="Commercial"?"grey":"blue"}">${C.type}</span></div>
       <div class="muted">Business Partner ${currentBP} &middot; identity confirmed &#10004;</div></div>
-    <div class="kv"><b>Contract Accounts</b>${C.cas.map(c=>`${c.id} <span class="pill blue">${c.div}</span>`).join("<br>")}</div>
+    <div class="kv"><b>Contract Accounts</b>${caKv(C.cas)}</div>
     <div class="kv"><b>Premise</b>${C.premise}</div>
-    ${deviceKv(C.device)}`
+    ${devicesKv(C.cas)}
+    ${derKv(C.der)}`
   : `
     <div class="avatar">${MOVEIN.initials}</div>
     <div><div class="name">${MOVEIN.name} <span class="pill blue">Residential</span></div>
@@ -484,7 +530,7 @@ function render(){
     <div class="kv"><b>Move-In Document</b>${MOVEIN.moveInId} <span class="pill orange">Pre-active</span></div>
     <div class="kv"><b>Prospective Premise</b>${MOVEIN.premise}</div>
     <div class="kv"><b>Requested Start</b>${MOVEIN.start}</div>
-    ${deviceKv(MOVEIN.device)}`;
+    ${devicesKv([{div:"Electricity", device:MOVEIN.device}])}`;
 
   document.getElementById("moveinBanner").classList.toggle("on", mode==="movein");
   const sel=document.getElementById("custSel");
@@ -510,7 +556,7 @@ function render(){
     <td class="muted">${CATALOG[id].cat}</td>
     <td><button class="btn primary" onclick="openEnroll('${id}')">Enroll</button></td>
   </tr>`).join("")+"</table>" +
-  `<div class="muted" style="margin-top:8px">Eligibility evaluated in one call for all programs across ${mode==="movein"?"prospective move-in data":cust().cas.length+" contract account(s)"} &middot; rule set v2026.06.2</div>`;
+  `<div class="muted" style="margin-top:8px">Eligibility evaluated in one call for all programs across ${mode==="movein"?"prospective move-in data":new Set(cust().cas.map(c=>c.id)).size+" contract account(s)"} &middot; rule set v2026.06.2</div>`;
 
   const M=document.getElementById("panel-msg");
   document.getElementById("cnt-msg").textContent=messages.length;
