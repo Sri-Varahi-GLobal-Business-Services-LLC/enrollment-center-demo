@@ -12,13 +12,14 @@ customer program enrollment.
 | `workcenter.html` | Work Center only (identified customer with active contracts, persona switcher) |
 | `movein.html` | Move-In embedded step only (pre-active context, deferred fulfillment) |
 
-Live (GitHub Pages, once enabled): https://nammi2011.github.io/enrollment-center-demo/ ,
+Live (GitHub Pages, once enabled): https://sri-varahi-global-business-services-llc.github.io/enrollment-center-demo/ ,
 `/workcenter.html`, `/movein.html`
 
 ## What it shows
 
 - Two access modes: standalone **Work Center** and **Move-In (embedded)** pre-active context
-- Four customer personas (residential combo, credit-challenged, medical/protected, commercial) selectable in Work Center mode
+- **Seven customer personas** (combo CA-per-utility, credit/AMI-fault, combo single-CA medical, commercial+BESS, non-AMI, medical+AMI, prepay-active) selectable in Work Center mode
+- **Per-utility device model**: device number, meter number, AMI/AMR type and connection status per service; DER equipment (EV charger, battery, generator) shown where present
 - Program catalog from the legacy Enrollment Center scope: PTR, CPP, TOU, Peak Power Savers, Smart Thermostat, CSDD, eBill, DPP, Budget Billing, PrePay, CARE/FERA, Medical Alert, Commercial DR
 - The four Enrollment Center panels: Participating Programs, Available (Eligible) Programs,
   Eligibility Messages (hard stop / warning severities), Program History
